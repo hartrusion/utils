@@ -2,9 +2,11 @@
 /target/
 /build/
 /out/
+/dist/
 
 # Build configuration, source code only here.
 build.xml
+manifest.mf
 
 # IDE: IntelliJ IDEA
 /.idea/
@@ -18,7 +20,7 @@ build.xml
 /nbproject/
 /nbbuild/
 /nbdist/
-/nbdist*/ 
+/nbdist*/
 /var/
 build/
 nbactions.xml
