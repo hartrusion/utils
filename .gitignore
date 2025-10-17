@@ -3,6 +3,9 @@
 /build/
 /out/
 
+# Build configuration, source code only here.
+build.xml
+
 # IDE: IntelliJ IDEA
 /.idea/
 /*.iml
