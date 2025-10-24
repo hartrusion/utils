@@ -59,7 +59,7 @@ public interface ModelManipulation {
      *
      * @param ac
      */
-    public void updateProperty(ActionCommand ac);
+    public void handleAction(ActionCommand ac);
 
     public void registerController(ModelListener controller);
 }

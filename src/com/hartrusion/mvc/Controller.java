@@ -71,11 +71,11 @@ public class Controller implements ViewerController, ModelListener {
     }
 
     @Override
-    public void firePropertyUpdates() {
+    public void fireActions() {
         ActionCommand evt;
         while (!pendingActions.isEmpty()) {
             evt = pendingActions.poll();
-            model.updateProperty(evt);
+            model.handleAction(evt);
         }
     }
 

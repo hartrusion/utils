@@ -44,17 +44,16 @@ public interface ModelListener extends PrimitiveListener {
     public Object getOldChangeValue(String propertyName);
 
     /**
-     * Tells the controller to send all property updates to the model. This is
-     * required for the application to be threadsafe and allows the model to
-     * recceive all property change request on a certain time and not in the
-     * middle of all executions.
+     * Tells the controller to send all actions to the model. This is required
+     * for the application to be threadsafe and allows the model to recceive all
+     * actions on a certain time and not in the middle of all executions.
      * <p>
      * This method has to be implemented thread-save, so using "synchronized" is
      * required on implementation
      * <p>
-     * This method will call updateProperty() on the model for all qued updates.
+     * This method will call handleAction() on the model for all qued updates.
      */
-    public void firePropertyUpdates();
+    public void fireActions();
 
     /**
      * Allows registering the model to the controller.
