@@ -3,7 +3,12 @@ Common used classes for my projects. Contains some helper classes and a
 model view controller implementation for swing applications. As I'm just an 
 engineer and no experienced java programmer, this might not be of use for 
 you at all.
-It also serves as an exercise on how to use git and github.
+
+**Please note: This is work in progess. It's propably not good code and only
+published to have easy access to it and disclose source code of my projects
+for security reasons.** I strongly believe that beeing able to disclose the 
+full source and allow people to complile and build projects themselves is
+a proper way to prove that an application does not pose any risks.
 
 ### ArrayExt
 I use java for doing things I was doing in MATLAB/Octave before and had to code 
