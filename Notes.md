@@ -36,3 +36,6 @@ Change in Project Structure - Project Settings:
 AbsoluteLayout comes packed with NetBeans installation.
 JAR location: \java\modules\ext
 Source: \java\sources\org\netbeans\lib\awtextra
+
+#### Noteable settings
+Limit Line length: Settings - Editor - Code Style - "Hard Wrap at:"
