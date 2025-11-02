@@ -43,8 +43,11 @@ public class SimpleLogOut {
         for (Handler h : root.getHandlers()) {
             root.removeHandler(h);
         }
-
-        // Generate StreamHandler that 
+        
+        root.setLevel(Level.CONFIG);
+        
+        // Generate StreamHandler that uses the One-Line-Formatter and the
+        // System.out.
         Handler outHandler = new StreamHandler(
                 System.out, new OneLineFormatter()
         ) {
@@ -54,11 +57,48 @@ public class SimpleLogOut {
                 flush(); // do not buffer
             }
         };
-
-        // Only log and output on and above level CONFIG
+        // Only log and output on and above level CONFIG...
         outHandler.setLevel(Level.CONFIG);
+        // but not warning.
+        outHandler.setFilter(new MaxLevelFilter(Level.WARNING));
+        root.addHandler(outHandler);
+        
+        // Generate a second handler that will output higher levels to 
+        // System.err instead of sys.out.
+        outHandler = new StreamHandler(
+                System.err, new OneLineFormatter()
+        ) {
+            @Override
+            public synchronized void publish(LogRecord record) {
+                super.publish(record);
+                flush(); // do not buffer
+            }
+        };
+        outHandler.setLevel(Level.WARNING);
+        root.addHandler(outHandler);
+    }
+    
+    public static void configureLoggingWarningsOnly() {
+        Logger root = Logger.getLogger(""); // get root logger
+        // Remove all handlers
+        for (Handler h : root.getHandlers()) {
+            root.removeHandler(h);
+        }
+        
         root.setLevel(Level.CONFIG);
-
+        
+        // Generate a second handler that will output only warning and above
+        // to System.err
+        Handler outHandler = new StreamHandler(
+                System.err, new OneLineFormatter()
+        ) {
+            @Override
+            public synchronized void publish(LogRecord record) {
+                super.publish(record);
+                flush(); // do not buffer
+            }
+        };
+        outHandler.setLevel(Level.WARNING);
         root.addHandler(outHandler);
     }
 }
@@ -108,5 +148,18 @@ class OneLineFormatter extends Formatter {
             }
         }
         return sb.toString();
+    }
+}
+
+class MaxLevelFilter implements Filter {
+    private final Level max;
+
+    public MaxLevelFilter(Level max) {
+        this.max = max;
+    }
+
+    @Override
+    public boolean isLoggable(LogRecord record) {
+        return record.getLevel().intValue() < max.intValue();
     }
 }
