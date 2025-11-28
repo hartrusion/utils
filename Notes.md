@@ -12,8 +12,12 @@ External jar files: Properties - Libraries - Compile: Add to Classpath
 * Built classes: /out/production/projectName/
 * jar file: /out/artifacts/utils
 
-Classes are compiled with build, jar is build using a configuration artifact, 
-build jar with: Top Menu - Build - Build artifacts...
+Classes are compiled with build, jar is build using a configuration artifact.
+
+Project Structure - Artifacts - (+) to add new artifact. Add out/production 
+directory contents to the output layout. 
+
+Build jar with: Top Menu - Build - Build artifacts...
 
 #### External jar files:
 
@@ -37,5 +41,5 @@ AbsoluteLayout comes packed with NetBeans installation.
 JAR location: \java\modules\ext
 Source: \java\sources\org\netbeans\lib\awtextra
 
-#### Noteable settings
+#### Notable settings
 Limit Line length: Settings - Editor - Code Style - "Hard Wrap at:"
