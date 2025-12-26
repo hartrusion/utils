@@ -22,7 +22,7 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
     - name: Build with Ant
-      run: ant -noinput -buildfile build.xml
+      run: ant -noinput -buildfile .github/build.xml jar
     - uses: actions/upload-artifact@v4
       with:
         name: Package
