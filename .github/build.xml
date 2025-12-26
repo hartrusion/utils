@@ -1,5 +1,5 @@
 <!-- use basedir .. to reference root dir from this .github folder-->
-<project name="simple-project" default="jar" basedir="..">
+<project name="Utils" default="jar" basedir="..">
   <property name="src.dir" value="src"/>
   <property name="build.dir" value="build"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
