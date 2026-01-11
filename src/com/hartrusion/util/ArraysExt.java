@@ -49,7 +49,11 @@ public abstract class ArraysExt {
         Object[] newArray;
         if (array.length != newLength) {
             newArray = new Object[newLength];
-            System.arraycopy(array, 0, newArray, 0, array.length);
+            if (array.length < newLength) {
+                System.arraycopy(array, 0, newArray, 0, array.length);
+            } else {
+                System.arraycopy(array, 0, newArray, 0, newLength - 1);
+            }
             return newArray;
         } else {
             return array;
@@ -74,7 +78,11 @@ public abstract class ArraysExt {
         byte[] newArray;
         if (array.length != newLength) {
             newArray = new byte[newLength];
-            System.arraycopy(array, 0, newArray, 0, array.length);
+            if (array.length < newLength) {
+                System.arraycopy(array, 0, newArray, 0, array.length);
+            } else {
+                System.arraycopy(array, 0, newArray, 0, newLength - 1);
+            }
             return newArray;
         } else {
             return array;
@@ -99,7 +107,11 @@ public abstract class ArraysExt {
         short[] newArray;
         if (array.length != newLength) {
             newArray = new short[newLength];
-            System.arraycopy(array, 0, newArray, 0, array.length);
+            if (array.length < newLength) {
+                System.arraycopy(array, 0, newArray, 0, array.length);
+            } else {
+                System.arraycopy(array, 0, newArray, 0, newLength - 1);
+            }
             return newArray;
         } else {
             return array;
@@ -124,7 +136,11 @@ public abstract class ArraysExt {
         int[] newArray;
         if (array.length != newLength) {
             newArray = new int[newLength];
-            System.arraycopy(array, 0, newArray, 0, array.length);
+            if (array.length < newLength) {
+                System.arraycopy(array, 0, newArray, 0, array.length);
+            } else {
+                System.arraycopy(array, 0, newArray, 0, newLength - 1);
+            }
             return newArray;
         } else {
             return array;
@@ -149,7 +165,11 @@ public abstract class ArraysExt {
         long[] newArray;
         if (array.length != newLength) {
             newArray = new long[newLength];
-            System.arraycopy(array, 0, newArray, 0, array.length);
+            if (array.length < newLength) {
+                System.arraycopy(array, 0, newArray, 0, array.length);
+            } else {
+                System.arraycopy(array, 0, newArray, 0, newLength - 1);
+            }
             return newArray;
         } else {
             return array;
@@ -174,7 +194,11 @@ public abstract class ArraysExt {
         float[] newArray;
         if (array.length != newLength) {
             newArray = new float[newLength];
-            System.arraycopy(array, 0, newArray, 0, array.length);
+            if (array.length < newLength) {
+                System.arraycopy(array, 0, newArray, 0, array.length);
+            } else {
+                System.arraycopy(array, 0, newArray, 0, newLength - 1);
+            }
             return newArray;
         } else {
             return array;
@@ -199,7 +223,11 @@ public abstract class ArraysExt {
         double[] newArray;
         if (array.length != newLength) {
             newArray = new double[newLength];
-            System.arraycopy(array, 0, newArray, 0, array.length);
+            if (array.length < newLength) {
+                System.arraycopy(array, 0, newArray, 0, array.length);
+            } else {
+                System.arraycopy(array, 0, newArray, 0, newLength - 1);
+            }
             return newArray;
         } else {
             return array;
@@ -224,7 +252,11 @@ public abstract class ArraysExt {
         boolean[] newArray;
         if (array.length != newLength) {
             newArray = new boolean[newLength];
-            System.arraycopy(array, 0, newArray, 0, array.length);
+            if (array.length < newLength) {
+                System.arraycopy(array, 0, newArray, 0, array.length);
+            } else {
+                System.arraycopy(array, 0, newArray, 0, newLength - 1);
+            }
             return newArray;
         } else {
             return array;
@@ -249,7 +281,11 @@ public abstract class ArraysExt {
         char[] newArray;
         if (array.length != newLength) {
             newArray = new char[newLength];
-            System.arraycopy(array, 0, newArray, 0, array.length);
+            if (array.length < newLength) {
+                System.arraycopy(array, 0, newArray, 0, array.length);
+            } else {
+                System.arraycopy(array, 0, newArray, 0, newLength - 1);
+            }
             return newArray;
         } else {
             return array;
