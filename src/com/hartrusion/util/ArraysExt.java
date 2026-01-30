@@ -51,7 +51,7 @@ public abstract class ArraysExt {
             newArray = new Object[newLength];
             if (array.length < newLength) {
                 System.arraycopy(array, 0, newArray, 0, array.length);
-            } else {
+            } else if (newLength >= 1) {
                 System.arraycopy(array, 0, newArray, 0, newLength - 1);
             }
             return newArray;
@@ -80,7 +80,7 @@ public abstract class ArraysExt {
             newArray = new byte[newLength];
             if (array.length < newLength) {
                 System.arraycopy(array, 0, newArray, 0, array.length);
-            } else {
+            } else if (newLength >= 1) {
                 System.arraycopy(array, 0, newArray, 0, newLength - 1);
             }
             return newArray;
@@ -109,7 +109,7 @@ public abstract class ArraysExt {
             newArray = new short[newLength];
             if (array.length < newLength) {
                 System.arraycopy(array, 0, newArray, 0, array.length);
-            } else {
+            } else if (newLength >= 1) {
                 System.arraycopy(array, 0, newArray, 0, newLength - 1);
             }
             return newArray;
@@ -138,7 +138,7 @@ public abstract class ArraysExt {
             newArray = new int[newLength];
             if (array.length < newLength) {
                 System.arraycopy(array, 0, newArray, 0, array.length);
-            } else {
+            } else if (newLength >= 1) {
                 System.arraycopy(array, 0, newArray, 0, newLength - 1);
             }
             return newArray;
@@ -167,7 +167,7 @@ public abstract class ArraysExt {
             newArray = new long[newLength];
             if (array.length < newLength) {
                 System.arraycopy(array, 0, newArray, 0, array.length);
-            } else {
+            } else if (newLength >= 1) {
                 System.arraycopy(array, 0, newArray, 0, newLength - 1);
             }
             return newArray;
@@ -196,7 +196,7 @@ public abstract class ArraysExt {
             newArray = new float[newLength];
             if (array.length < newLength) {
                 System.arraycopy(array, 0, newArray, 0, array.length);
-            } else {
+            } else if (newLength >= 1) {
                 System.arraycopy(array, 0, newArray, 0, newLength - 1);
             }
             return newArray;
@@ -225,7 +225,7 @@ public abstract class ArraysExt {
             newArray = new double[newLength];
             if (array.length < newLength) {
                 System.arraycopy(array, 0, newArray, 0, array.length);
-            } else {
+            } else if (newLength >= 1) {
                 System.arraycopy(array, 0, newArray, 0, newLength - 1);
             }
             return newArray;
@@ -254,7 +254,7 @@ public abstract class ArraysExt {
             newArray = new boolean[newLength];
             if (array.length < newLength) {
                 System.arraycopy(array, 0, newArray, 0, array.length);
-            } else {
+            } else if (newLength >= 1) {
                 System.arraycopy(array, 0, newArray, 0, newLength - 1);
             }
             return newArray;
@@ -283,7 +283,7 @@ public abstract class ArraysExt {
             newArray = new char[newLength];
             if (array.length < newLength) {
                 System.arraycopy(array, 0, newArray, 0, array.length);
-            } else {
+            } else if (newLength >= 1) {
                 System.arraycopy(array, 0, newArray, 0, newLength - 1);
             }
             return newArray;
