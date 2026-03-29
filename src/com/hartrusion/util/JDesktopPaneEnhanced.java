@@ -59,16 +59,6 @@ public class JDesktopPaneEnhanced extends JDesktopPane implements Scrollable {
     private static final int BLOCK_INCREMENT = 128;
     private static final int GAP_SIZE = 4;
 
-    public JDesktopPaneEnhanced() {
-        // Use a timer that will call the update method every 300 ms so in case 
-        // of any update ever beeing missed, the scrolling behavior will be 
-        // fixed.
-        Timer fallbackUpdater = new Timer(300, e -> updateView());
-        fallbackUpdater.setRepeats(true);
-        fallbackUpdater.start();
-
-    }
-
     @Override
     public Dimension getPreferredSize() {
         Dimension result = super.getPreferredSize();
@@ -87,21 +77,38 @@ public class JDesktopPaneEnhanced extends JDesktopPane implements Scrollable {
      */
     public void updateView() {
         Rectangle max = new Rectangle(0, 0, 0, 0);
+        boolean hasMaximizedFrame = false;
+        
         for (JInternalFrame f : getAllFrames()) {
             if (f.isVisible()) {
+                if (f.isMaximum()) {
+                    hasMaximizedFrame = true;
+                }
                 Rectangle r = f.getBounds();
                 max = max.union(r);
             }
         }
-        // fügen wir einen Rand hinzu
-        int pad = 32;
-        Dimension newPref = new Dimension(max.x + max.width + pad, max.y + max.height + pad);
-
-        // Nicht kleiner als aktueller Viewport
+        
         JViewport vp = findViewport();
-        if (vp != null) {
-            newPref.width = Math.max(newPref.width, vp.getWidth());
-            newPref.height = Math.max(newPref.height, vp.getHeight());
+        Dimension newPref;
+
+        // Wenn ein Fenster maximiert ist, soll die Pane nicht über den Viewport hinauswachsen, 
+        // damit die Scrollbalken verschwinden.
+        if (hasMaximizedFrame && vp != null) {
+            newPref = new Dimension(vp.getWidth(), vp.getHeight());
+        } else {
+            // Kein "pad = 32" mehr! Dadurch erscheinen die Scrollbalken erst,
+            // wenn der Rand des Fensters den Rand des Viewports wirklich überschreitet.
+            int maxX = max.x + max.width;
+            int maxY = max.y + max.height;
+            
+            newPref = new Dimension(maxX, maxY);
+
+            // Nicht kleiner als aktueller Viewport
+            if (vp != null) {
+                newPref.width = Math.max(newPref.width, vp.getWidth());
+                newPref.height = Math.max(newPref.height, vp.getHeight());
+            }
         }
 
         setPreferredSize(newPref);
