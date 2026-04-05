@@ -248,13 +248,13 @@ public class JDesktopPaneEnhanced extends JDesktopPane implements Scrollable {
         updateView();
     }
 
-    public void windowsTileVertical(JDesktopPane desktop) {
+    public void windowsTileVertical() {
         JInternalFrame[] frames = getVisibleFrames();
         if (frames.length == 0) {
             return;
         }
 
-        Rectangle d = desktop.getBounds();
+        Rectangle d = getBounds();
         int w = d.width / frames.length;
         int x = 0;
 
@@ -264,17 +264,17 @@ public class JDesktopPaneEnhanced extends JDesktopPane implements Scrollable {
             f.setBounds(x, 0, w, d.height);
             x += w;
         }
-        desktop.revalidate();
-        desktop.repaint();
+        revalidate();
+        repaint();
     }
 
-    public void windowsTileHorizontal(JDesktopPane desktop) {
+    public void windowsTileHorizontal() {
         JInternalFrame[] frames = getVisibleFrames();
         if (frames.length == 0) {
             return;
         }
 
-        Rectangle d = desktop.getBounds();
+        Rectangle d = getBounds();
         int h = d.height / frames.length;
         int y = 0;
 
@@ -284,8 +284,8 @@ public class JDesktopPaneEnhanced extends JDesktopPane implements Scrollable {
             f.setBounds(0, y, d.width, h);
             y += h;
         }
-        desktop.revalidate();
-        desktop.repaint();
+        revalidate();
+        repaint();
     }
 
     public void windowsCascade() {
@@ -322,7 +322,7 @@ public class JDesktopPaneEnhanced extends JDesktopPane implements Scrollable {
      * @param frame The JInternalFrame that will be moved and placed.
      * @param ref JInternalFrame where frame will be put next to (will not move)
      */
-    public void windowPlaceRightTo(JInternalFrame frame, JInternalFrame ref) {
+    public static void windowPlaceRightTo(JInternalFrame frame, JInternalFrame ref) {
         Rectangle refBounds = ref.getBounds();
         Rectangle newBounds = new Rectangle(
                 refBounds.x + refBounds.width + GAP_SIZE,
@@ -337,7 +337,7 @@ public class JDesktopPaneEnhanced extends JDesktopPane implements Scrollable {
      * @param frame The JInternalFrame that will be moved and placed.
      * @param ref JInternalFrame where frame will be put next to (will not move)
      */
-    public void windowPlaceBelow(JInternalFrame frame, JInternalFrame ref) {
+    public static void windowPlaceBelow(JInternalFrame frame, JInternalFrame ref) {
         Rectangle refBounds = ref.getBounds();
         Rectangle newBounds = new Rectangle(
                 refBounds.x,
@@ -351,10 +351,22 @@ public class JDesktopPaneEnhanced extends JDesktopPane implements Scrollable {
      *
      * @param frame JInternalFrame
      */
-    public void windowPlaceAtZero(JInternalFrame frame) {
+    public static void windowPlaceAtZero(JInternalFrame frame) {
         Rectangle newBounds = new Rectangle(
                 GAP_SIZE, GAP_SIZE,
                 frame.getBounds().width, frame.getBounds().height);
+        frame.setBounds(newBounds);
+    }
+    
+    /**
+     * Sets the size of an frame object.
+     *
+     * @param frame JInternalFrame
+     */
+    public static void windowSetSize(JInternalFrame frame, int width, int height) {
+        Rectangle newBounds = new Rectangle(
+                frame.getBounds().x, frame.getBounds().y,
+                width, height);
         frame.setBounds(newBounds);
     }
 
