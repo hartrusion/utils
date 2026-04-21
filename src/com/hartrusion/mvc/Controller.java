@@ -24,11 +24,11 @@
 package com.hartrusion.mvc;
 
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Implements some interpretation of the MVC pattern.
@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Will redirect all received property changes from a model as a component
  * update to an UpdateReceiver. An UpdateReceiver is a view-specialized class
  * that will, for example, put the Updates into the event queue, depending on
- * what the view architecture ist.
+ * what the view architecture is.
  * <p>
  * The view sends user actions to this controller, the controller will offer
  * those as action commands in a concurrent queue to the model.
@@ -49,12 +49,13 @@ public class Controller implements ViewerController, ModelListener {
 
     /**
      * Holds a list of all registered update receivers. This is an instance that
-     * will forward the updates to the view and is dependend on the viewer
+     * will forward the updates to the view and is dependent on the viewer
      * implementation.
      */
-    private final List<UpdateReceiver> updaters = new ArrayList<>();
+    private final List<UpdateReceiver> updaters = new CopyOnWriteArrayList<>();
 
-    private final Map<String, Object> lastPropertyChanges = new HashMap<>();
+    private final Map<String, Object> lastPropertyChanges
+            = new ConcurrentHashMap<>();
 
     /**
      * Actions from views are getting stored in this queue. The model has to
