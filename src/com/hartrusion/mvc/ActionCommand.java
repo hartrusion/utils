@@ -28,13 +28,20 @@ package com.hartrusion.mvc;
  * to the PropertyChangeEvent which is used to propagate changes from the model
  * to the view, an action does not propagate changes and does not have a
  * previous value. Instead, it is a command that can do something by its own
- * existance, without the need of changing.
+ * existence, without the need of changing.
  *
  * @author Viktor Alexander Hartung
  */
 public class ActionCommand {
 
+    /**
+     * To identify what action this is, unique String objects are used here.
+     */
     String propertyName;
+    
+    /**
+     * Transported value, can be any object
+     */
     Object value;
 
     /**
@@ -42,7 +49,7 @@ public class ActionCommand {
      *
      * @param propertyName the programmatic name of the property that was
      * changed
-     * @param value the value of the property
+     * @param value the value of the property (can be null)
      *
      * @throws IllegalArgumentException if {@code propertyName} is {@code null}.
      */
