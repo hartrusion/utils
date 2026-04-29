@@ -27,10 +27,23 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
- * 
- * @author viktor
+ * Reads an object of a specific type from a binary data stream.
+ * <p>
+ * This interface is used by the network class registry. A registered type needs
+ * a matching reader so that received binary data can be converted back into a
+ * Java object.
+ * <p>
+ * The generic type parameter T is the type that will be created by this reader.
+ * Typical examples are String, Double, Boolean, Integer, enums, or custom
+ * snapshot classes such as ValueSnapshot.
+ * <p>
+ * Implementations are usually provided as lambda expressions when a type is
+ * registered in the ClassRegistry.
+ *
+ * @param <T> type of the object that is read from the stream
+ * @author Viktor Alexander Hartung
  */
 public interface ValueReader<T> {
 
-    T read(DataInputStream dis) throws IOException;
+    T read(DataInputStream inputStream) throws IOException;
 }

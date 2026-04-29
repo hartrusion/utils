@@ -27,10 +27,23 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- *
+ * Writes an object of a specific type to a binary data stream.
+ * <p>
+ * This interface is used by the network class registry. A registered type needs
+ * a matching writer so that Java objects can be converted into binary form
+ * before they are sent over the network.
+ * <p>
+ * The generic type parameter T is the type that can be written by this writer.
+ * Typical examples are String, Double, Boolean, Integer, enums, or custom
+ * snapshot classes such as ValueSnapshot.
+ * <p>
+ * Implementations are usually provided as lambda expressions when a type is
+ * registered in the ClassRegistry.
+ * <p>
+ * @param <T> type of the object that is written to the stream
  * @author Viktor Alexander Hartung
  */
 public interface ValueWriter<T> {
 
-    void write(DataOutputStream dos, T value) throws IOException;
+    void write(DataOutputStream outputStream, T value) throws IOException;
 }

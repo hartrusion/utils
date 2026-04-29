@@ -24,6 +24,9 @@
 package com.hartrusion.mvc.net;
 
 /**
+ * A registry that knows all objects that shall be transferred via network with
+ * the provided mvc concept. The registry will take expressions for construction
+ * of each object that is to be transferred.
  *
  * @author Viktor Alexander Hartung
  */
@@ -33,7 +36,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClassRegistry {
+public class ClassBlueprints {
 
     private final Map<Class<?>, Byte> classToId = new HashMap<>();
     private final Map<Byte, ValueReader<?>> idToReader = new HashMap<>();
@@ -45,12 +48,12 @@ public class ClassRegistry {
      * Registeres a class with its own read and write logic
      */
     @SuppressWarnings("unchecked")
-    public <T> void registerType(Class<T> clazz, ValueWriter<T> writer, ValueReader<T> reader) {
+    public <T> void registerType(Class<T> clss, ValueWriter<T> writer, ValueReader<T> reader) {
         if (nextId == Byte.MAX_VALUE) {
             throw new IllegalStateException("Zu viele Typen registriert");
         }
 
-        classToId.put(clazz, nextId);
+        classToId.put(clss, nextId);
         idToReader.put(nextId, reader);
         // Cast ist sicher, da wir nur exakt T über writeObject zulassen
         idToWriter.put(nextId, (ValueWriter<Object>) writer);
@@ -59,22 +62,21 @@ public class ClassRegistry {
     }
 
     /**
-     * Spezielle Hilfsmethode, um Enums vollautomatisch und sicher zu
-     * registrieren.
+     * Registers enumerations
      */
     public <E extends Enum<E>> void registerEnum(Class<E> enumClass) {
         registerType(enumClass,
-                (dos, value) -> dos.writeUTF(value.name()), // Als String schreiben
-                (dis) -> Enum.valueOf(enumClass, dis.readUTF()) // Sicher aus String rekonstruieren
+                (outputStream, value) -> outputStream.writeUTF(value.name()), // Als String schreiben
+                (inputStream) -> Enum.valueOf(enumClass, inputStream.readUTF()) // Sicher aus String rekonstruieren
         );
     }
 
     /**
-     * Schreibt ein Objekt typsicher in den Stream.
+     * Writs an object into stream
      */
-    public void writeObject(DataOutputStream dos, Object value) throws IOException {
+    public void writeObject(DataOutputStream outputStream, Object value) throws IOException {
         if (value == null) {
-            dos.writeByte(0); // 0 = null
+            outputStream.writeByte(0); // 0 = null
             return;
         }
 
@@ -82,27 +84,27 @@ public class ClassRegistry {
         Byte typeId = classToId.get(clazz);
 
         if (typeId == null) {
-            throw new IllegalArgumentException("Sicherheitsverletzung: Nicht registrierter Typ " + clazz.getName());
+            throw new IllegalArgumentException("Non registered type " + clazz.getName());
         }
 
-        dos.writeByte(typeId); // Schreibe Typ-ID
-        idToWriter.get(typeId).write(dos, value); // Schreibe Payload
+        outputStream.writeByte(typeId); // write Type ID
+        idToWriter.get(typeId).write(outputStream, value); // write Payload
     }
 
     /**
-     * Liest ein Objekt sicher aus dem Stream.
+     * Reads an object from stream
      */
-    public Object readObject(DataInputStream dis) throws IOException {
-        byte typeId = dis.readByte();
+    public Object readObject(DataInputStream inputStream) throws IOException {
+        byte typeId = inputStream.readByte();
         if (typeId == 0) {
             return null;
         }
 
         ValueReader<?> reader = idToReader.get(typeId);
         if (reader == null) {
-            throw new IOException("Protokollfehler: Unbekannte Typ-ID " + typeId);
+            throw new IOException("Unknown Type ID " + typeId);
         }
 
-        return reader.read(dis); // Erzeugt das Objekt über den registrierten Lambda-Ausdruck
+        return reader.read(inputStream); // Generate object with the registered lambda
     }
 }
