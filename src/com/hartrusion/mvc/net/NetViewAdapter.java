@@ -73,7 +73,7 @@ public class NetViewAdapter implements ViewerController {
      * @throws IOException
      */
     public void connect(String host, int port) throws IOException {
-        socket = new Socket("127.0.0.1", port);
+        socket = new Socket(host, port);
         inputStream = new DataInputStream(socket.getInputStream());
         outputStream = new DataOutputStream(socket.getOutputStream());
 
