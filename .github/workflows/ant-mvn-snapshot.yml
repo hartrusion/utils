@@ -6,6 +6,12 @@ name: Github Packages Snapshot
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.yml'
+      - '**/*.png'
+      - '**/*.svg'
+      - '**/*.xml'
   workflow_dispatch:
 
 permissions:
