@@ -72,7 +72,7 @@ public class Controller implements ViewerController, ModelListener {
     }
 
     @Override
-    public void fireActions() {
+    public synchronized void fireActions() {
         ActionCommand evt;
         while (!pendingActions.isEmpty()) {
             evt = pendingActions.poll();

@@ -45,13 +45,13 @@ public interface ModelListener extends PrimitiveListener {
 
     /**
      * Tells the controller to send all actions to the model. This is required
-     * for the application to be threadsafe and allows the model to recceive all
+     * for the application to be thread safe and allows the model to receive all
      * actions on a certain time and not in the middle of all executions.
      * <p>
      * This method has to be implemented thread-save, so using "synchronized" is
      * required on implementation
      * <p>
-     * This method will call handleAction() on the model for all qued updates.
+     * This method will call handleAction() on the model for all queued updates.
      */
     public void fireActions();
 
