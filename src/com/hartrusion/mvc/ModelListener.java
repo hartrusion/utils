@@ -61,4 +61,14 @@ public interface ModelListener extends PrimitiveListener {
      * @param model
      */
     public void registerModel(ModelManipulation model);
+
+    /**
+     * Removes the registered model from the controller, so that the model can
+     * be replaced by a new instance at runtime. The controller must keep
+     * working without a model and must not fail on actions from the view that
+     * arrive while no model is registered.
+     * <p>
+     * LLM code generated with Claude Opus 5.5
+     */
+    public void unregisterModel();
 }

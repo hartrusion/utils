@@ -202,6 +202,27 @@ public class ViewConnection implements UpdateReceiver {
         sendBooleanUpdate(propertyName, newValue);
     }
 
+    /**
+     * Returns whether the socket to the client is still open. The socket is
+     * closed when the client disconnects or when sending to it fails.
+     * <p>
+     * LLM code generated with Claude Opus 5.5
+     *
+     * @return true while the client is connected
+     */
+    public boolean isConnected() {
+        return !socket.isClosed();
+    }
+
+    /**
+     * LLM code generated with Claude Opus 5.5
+     *
+     * @return address and port of the connected client as text
+     */
+    public String getRemoteAddress() {
+        return String.valueOf(socket.getRemoteSocketAddress());
+    }
+
     public synchronized void close() {
         try {
             socket.close();
