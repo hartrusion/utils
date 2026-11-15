@@ -20,3 +20,10 @@
 # Operating system
 .DS_Store
 Thumbs.db
+
+# LLM documentation and probe scripts (kept local only)
+/LLM-GLOSSARY.md
+/LLM-HISTORY.md
+/probes/
+/probe-scripts/
+/probe_scripts/
