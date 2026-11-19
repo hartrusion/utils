@@ -172,6 +172,21 @@ public class ChornobylMetalTheme extends OceanTheme {
         return DESKTOP_BACKGROUND;
     }
 
+    // The Ocean theme paints the selected tab and the content area border of
+    // a JTabbedPane in a light blue (0xC8DDF2), which is replaced by a gray
+    // that is darker than the unselected tabs, like the selection highlight.
+    private static final ColorUIResource TAB_SELECTED
+            = new ColorUIResource(0xCCCCCC);
+
+    /**
+     *
+     * @return Background of the selected tab and the content area border of
+     * a JTabbedPane
+     */
+    protected ColorUIResource getTabSelected() {
+        return TAB_SELECTED;
+    }
+
     /**
      * Tells whether this theme has a dark background with light text, so that
      * elements that are not colored by the Metal look and feel, such as the
@@ -213,6 +228,10 @@ public class ChornobylMetalTheme extends OceanTheme {
         table.put("ToggleButton.foreground", getButtonForeground());
 
         table.put("Desktop.background", getDesktopBackground());
+
+        // Tabbed pane: remove the light blue of the selected tab
+        table.put("TabbedPane.selected", getTabSelected());
+        table.put("TabbedPane.contentAreaColor", getTabSelected());
 
         // Frames inside JDesktopPane are JInternalFrames
         // Remove the gradient from the selected frame
