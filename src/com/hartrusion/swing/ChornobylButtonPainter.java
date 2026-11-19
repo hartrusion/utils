@@ -32,7 +32,8 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
  * or the panel color as fill and the general text color of the theme for
  * their arrows, so that they can not be given the button style with colors
  * of the UIDefaults alone. The UI classes ChornobylMetalScrollBarUI,
- * ChornobylMetalSpinnerUI and ChornobylMetalComboBoxUI therefore replace the
+ * ChornobylMetalSpinnerUI and ChornobylMetalComboBoxUI and the check box and
+ * radio button icons of ChornobylMetalIconFactory therefore replace the
  * paint methods of these elements and call this class, so that all of them
  * share one implementation of the button look.
  * <p>
@@ -85,18 +86,38 @@ public final class ChornobylButtonPainter {
      */
     public static void paintButtonBody(Graphics g, int x, int y, int width,
             int height, boolean pressed, boolean enabled) {
-        if (pressed) {
-            g.setColor(UIManager.getColor("Button.select"));
-        } else {
-            g.setColor(UIManager.getColor("Button.background"));
-        }
+        g.setColor(getButtonFill(pressed));
         g.fillRect(x, y, width, height);
-        if (enabled) {
-            g.setColor(MetalLookAndFeel.getControlDarkShadow());
-        } else {
-            g.setColor(MetalLookAndFeel.getControlShadow());
-        }
+        g.setColor(getButtonOutline(enabled));
         g.drawRect(x, y, width - 1, height - 1);
+    }
+
+    /**
+     * Returns the fill of the flat buttons, which is used for shapes that are
+     * not painted by paintButtonBody, such as the circle of a radio button.
+     *
+     * @param pressed true returns the color of a pressed button
+     * @return Fill color of the flat buttons
+     */
+    public static Color getButtonFill(boolean pressed) {
+        if (pressed) {
+            return UIManager.getColor("Button.select");
+        }
+        return UIManager.getColor("Button.background");
+    }
+
+    /**
+     * Returns the outline color of the flat buttons, which is the same theme
+     * color as the border of the buttons of the Metal look and feel.
+     *
+     * @param enabled false returns the outline of disabled buttons
+     * @return Outline color of the flat buttons
+     */
+    public static Color getButtonOutline(boolean enabled) {
+        if (enabled) {
+            return MetalLookAndFeel.getControlDarkShadow();
+        }
+        return MetalLookAndFeel.getControlShadow();
     }
 
     /**

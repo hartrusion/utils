@@ -61,8 +61,13 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
     private static final ColorUIResource SECONDARY2
             = new ColorUIResource(0x505050);
 
-    // Frame, panel, dropdown and menu backgrounds
+    // Frame, panel and menu backgrounds, which are completely black
     private static final ColorUIResource SECONDARY3
+            = new ColorUIResource(0x000000);
+
+    // Background of closed combo boxes, which keep the dark gray they had
+    // before the panel background became black
+    private static final ColorUIResource COMBO_BOX_BACKGROUND
             = new ColorUIResource(0x3C3F41);
 
     // Background of text fields, lists and tables
@@ -85,14 +90,13 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
     private static final ColorUIResource DESKTOP_BACKGROUND
             = new ColorUIResource(0x2E3033);
 
-    // The selected tab and the frame around the tab content are slightly
-    // lighter than the panel background, while the unselected tabs are
-    // darker, which inverts the brightness order of the light theme.
+    // The selected tab and the frame around the tab content are the
+    // lightest gray of the tabs, the unselected tabs are darker but still
+    // lighter than the black tab area behind them.
     private static final ColorUIResource TAB_SELECTED
             = new ColorUIResource(0x4A4A4A);
 
-    private static final ColorUIResource TAB_AREA_BACKGROUND
-            = new ColorUIResource(0x3C3F41);
+    private static final ColorUIResource TAB_AREA_BACKGROUND = SECONDARY3;
 
     private static final ColorUIResource TAB_UNSELECTED
             = new ColorUIResource(0x2E3033);
@@ -174,14 +178,19 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
 
     /**
      * Keeps the progress bar fill of the dark theme at the selection gray,
-     * because the gray of disabled button texts that the light theme uses
-     * would be a bright bar on the dark background.
+     * because the button color that the light theme uses would hardly be
+     * visible on the black background.
      *
      * @return Fill color of the done part of a JProgressBar
      */
     @Override
     protected ColorUIResource getProgressBarFill() {
         return PRIMARY2;
+    }
+
+    @Override
+    protected ColorUIResource getComboBoxBackground() {
+        return COMBO_BOX_BACKGROUND;
     }
 
     /**

@@ -217,14 +217,26 @@ public class ChornobylMetalTheme extends OceanTheme {
     }
 
     /**
-     * Returns the fill of the progress bars, which is the gray of the text of
-     * disabled buttons, because the default fill (PRIMARY2) is hardly visible
-     * on the panel background.
+     * Returns the fill of the progress bars, which is the color of the
+     * buttons, because the default fill (PRIMARY2) is hardly visible on the
+     * panel background. The text on the fill gets the text color of the
+     * buttons.
      *
      * @return Fill color of the done part of a JProgressBar
      */
     protected ColorUIResource getProgressBarFill() {
-        return getInactiveControlTextColor();
+        return getButtonReleased();
+    }
+
+    /**
+     * Returns the background of closed combo boxes, which is the panel
+     * background in the light theme. The getter exists so that the dark
+     * theme can keep its gray combo boxes on the black panel background.
+     *
+     * @return Background of a closed, non-editable JComboBox
+     */
+    protected ColorUIResource getComboBoxBackground() {
+        return getSecondary3();
     }
 
     /**
@@ -308,6 +320,16 @@ public class ChornobylMetalTheme extends OceanTheme {
                 new BorderUIResource.LineBorderUIResource(getSecondary1()));
 
         table.put("ProgressBar.foreground", getProgressBarFill());
+        table.put("ProgressBar.selectionForeground", getButtonForeground());
+
+        table.put("ComboBox.background", getComboBoxBackground());
+        table.put("ComboBox.disabledBackground", getComboBoxBackground());
+
+        // Check boxes and radio buttons look like the flat buttons, which is
+        // done by icons of their own instead of the Ocean gradients.
+        table.put("CheckBox.icon", ChornobylMetalIconFactory.getCheckBoxIcon());
+        table.put("RadioButton.icon",
+                ChornobylMetalIconFactory.getRadioButtonIcon());
 
         // Frames inside JDesktopPane are JInternalFrames
         // Remove the gradient from the selected frame
