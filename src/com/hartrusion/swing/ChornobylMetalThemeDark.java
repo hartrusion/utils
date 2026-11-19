@@ -72,11 +72,6 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
     private static final ColorUIResource SECONDARY3
             = new ColorUIResource(0x000000);
 
-    // Background of closed combo boxes, which keep the dark gray they had
-    // before the panel background became black
-    private static final ColorUIResource COMBO_BOX_BACKGROUND
-            = new ColorUIResource(0x3C3F41);
-
     // Background of text fields, lists and tables
     private static final ColorUIResource WHITE
             = new ColorUIResource(0x2B2B2B);
@@ -193,11 +188,6 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
     @Override
     protected ColorUIResource getProgressBarFill() {
         return PRIMARY2;
-    }
-
-    @Override
-    protected ColorUIResource getComboBoxBackground() {
-        return COMBO_BOX_BACKGROUND;
     }
 
     /**

@@ -24,11 +24,14 @@
 package com.hartrusion.swing;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.OceanTheme;
 
 /**
@@ -234,15 +237,67 @@ public class ChornobylMetalTheme extends OceanTheme {
         return getButtonReleased();
     }
 
+    // Colors of the reading displays of the RBMK simulator (the JLabels
+    // named jLabelReading... in PanelCoreControl), which show values in a
+    // green monospaced font on a dark gray field with a black frame. The
+    // same colors mark the unacknowledged alarms in the alarm table. Single
+    // line text fields, spinners, combo boxes and tables use this style, so
+    // that they look like the displays of the control panel.
+    private static final ColorUIResource READING_BACKGROUND
+            = new ColorUIResource(0x333333);
+
+    private static final ColorUIResource READING_FOREGROUND
+            = new ColorUIResource(0x00FF99);
+
+    // Text of disabled reading displays, which is the reading green mixed
+    // half with the reading background.
+    private static final ColorUIResource READING_DISABLED_FOREGROUND
+            = new ColorUIResource(0x1A9966);
+
+    private static final ColorUIResource READING_BORDER
+            = new ColorUIResource(0x000000);
+
     /**
-     * Returns the background of closed combo boxes, which is the panel
-     * background in the light theme. The getter exists so that the dark
-     * theme can keep its gray combo boxes on the black panel background.
      *
-     * @return Background of a closed, non-editable JComboBox
+     * @return Background of reading displays such as text fields and tables
      */
-    protected ColorUIResource getComboBoxBackground() {
-        return getSecondary3();
+    protected ColorUIResource getReadingBackground() {
+        return READING_BACKGROUND;
+    }
+
+    /**
+     *
+     * @return Text color of reading displays
+     */
+    protected ColorUIResource getReadingForeground() {
+        return READING_FOREGROUND;
+    }
+
+    /**
+     *
+     * @return Text color of disabled reading displays
+     */
+    protected ColorUIResource getReadingDisabledForeground() {
+        return READING_DISABLED_FOREGROUND;
+    }
+
+    /**
+     *
+     * @return Color of the frame around reading displays and of table grids
+     */
+    protected ColorUIResource getReadingBorder() {
+        return READING_BORDER;
+    }
+
+    /**
+     * Returns the monospaced font of the reading displays in the size of
+     * the control font of the theme, so that text fields keep their height.
+     *
+     * @return Font of reading displays
+     */
+    protected FontUIResource getReadingFont() {
+        return new FontUIResource(Font.MONOSPACED, Font.PLAIN,
+                getControlTextFont().getSize());
     }
 
     /**
@@ -328,8 +383,7 @@ public class ChornobylMetalTheme extends OceanTheme {
         table.put("ProgressBar.foreground", getProgressBarFill());
         table.put("ProgressBar.selectionForeground", getButtonForeground());
 
-        table.put("ComboBox.background", getComboBoxBackground());
-        table.put("ComboBox.disabledBackground", getComboBoxBackground());
+        addReadingEntriesToTable(table);
 
         // Check boxes and radio buttons look like the flat buttons, which is
         // done by icons of their own instead of the Ocean gradients.
@@ -340,6 +394,63 @@ public class ChornobylMetalTheme extends OceanTheme {
         // Frames inside JDesktopPane are JInternalFrames
         // Remove the gradient from the selected frame
         table.remove("InternalFrame.activeTitleGradient");
+    }
+
+    /**
+     * Writes the style of the reading displays (green monospaced text on dark
+     * gray with a black frame) into the UIDefaults of all single line text
+     * fields, of the spinner editor (which is a JFormattedTextField), of the
+     * combo box value and its popup list and of tables. Multi line text
+     * components keep the default style. Selected text and selected rows are
+     * shown inverted, green with dark gray text.
+     *
+     * @param table UIDefaults of the look and feel
+     */
+    private void addReadingEntriesToTable(UIDefaults table) {
+        BorderUIResource readingFieldBorder = new BorderUIResource(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(getReadingBorder()),
+                        BorderFactory.createEmptyBorder(1, 2, 1, 2)));
+        String[] fieldPrefixes = {"TextField", "FormattedTextField",
+            "PasswordField"};
+        for (String prefix : fieldPrefixes) {
+            table.put(prefix + ".background", getReadingBackground());
+            // Metal uses the inactive colors for read-only and disabled
+            // fields, a read-only field is a display and keeps its green.
+            table.put(prefix + ".inactiveBackground", getReadingBackground());
+            table.put(prefix + ".foreground", getReadingForeground());
+            table.put(prefix + ".inactiveForeground",
+                    getReadingDisabledForeground());
+            table.put(prefix + ".caretForeground", getReadingForeground());
+            table.put(prefix + ".selectionBackground", getReadingForeground());
+            table.put(prefix + ".selectionForeground", getReadingBackground());
+            table.put(prefix + ".font", getReadingFont());
+            table.put(prefix + ".border", readingFieldBorder);
+        }
+
+        table.put("Spinner.border",
+                new BorderUIResource.LineBorderUIResource(getReadingBorder()));
+        table.put("Spinner.font", getReadingFont());
+
+        table.put("ComboBox.background", getReadingBackground());
+        table.put("ComboBox.disabledBackground", getReadingBackground());
+        table.put("ComboBox.foreground", getReadingForeground());
+        table.put("ComboBox.disabledForeground",
+                getReadingDisabledForeground());
+        table.put("ComboBox.selectionBackground", getReadingForeground());
+        table.put("ComboBox.selectionForeground", getReadingBackground());
+        table.put("ComboBox.font", getReadingFont());
+
+        table.put("Table.background", getReadingBackground());
+        table.put("Table.foreground", getReadingForeground());
+        table.put("Table.focusCellBackground", getReadingBackground());
+        table.put("Table.focusCellForeground", getReadingForeground());
+        table.put("Table.selectionBackground", getReadingForeground());
+        table.put("Table.selectionForeground", getReadingBackground());
+        table.put("Table.gridColor", getReadingBorder());
+        // Remaining light blue colors of the Ocean theme around tables
+        table.put("Table.dropCellBackground", getPrimary2());
+        table.put("TableHeader.focusCellBackground", getPrimary2());
     }
 
     /**
