@@ -24,6 +24,7 @@
 package com.hartrusion.swing;
 
 import java.awt.Color;
+import javax.swing.UIDefaults;
 import javax.swing.plaf.ColorUIResource;
 
 /**
@@ -210,6 +211,20 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
     @Override
     public ColorUIResource getControlTextColor() {
         return BLACK;
+    }
+
+    @Override
+    public void addCustomEntriesToTable(UIDefaults table) {
+        super.addCustomEntriesToTable(table);
+        // The Ocean theme paints the menu bar and the tool bar with a gradient
+        // from getWhite() to a hard-coded light gray, which gives a bright bar
+        // on the black background. Without the gradient, the menu bar is
+        // painted flat in the color of the text fields and lists, so that it
+        // stands out from the black panels, and gets a line in the outline
+        // color below it, while the tool bar becomes black like the panels.
+        table.remove("MenuBar.gradient");
+        table.put("MenuBar.background", WHITE);
+        table.put("MenuBar.borderColor", SECONDARY1);
     }
 
     @Override
