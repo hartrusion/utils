@@ -69,13 +69,31 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
             = new ColorUIResource(0x505050);
 
     // Frame, panel and menu backgrounds, also the background of internal
-    // frames, which is darker than the darkest buttons (BUTTON_RELEASED) but
-    // not completely black
+    // frames. It is close to black, but light enough that the raised,
+    // lowered and etched borders of panels, which Swing derives from the
+    // background with brighter() and darker(), still show their shading. The
+    // buttons are slightly darker, like the black switches on the light panel
+    // of the light theme.
     private static final ColorUIResource SECONDARY3
-            = new ColorUIResource(0x121212);
+            = new ColorUIResource(0x303030);
+
+    // Border of the selected internal frame, which is lighter than its title
+    // bar (PRIMARY3), so that the border and the title bar can be told apart.
+    private static final ColorUIResource FRAME_BORDER_ACTIVE
+            = new ColorUIResource(0x666666);
+
+    // Border of the internal frames that are not selected, which is lighter
+    // than their title bar in the panel color.
+    private static final ColorUIResource FRAME_BORDER_INACTIVE
+            = new ColorUIResource(0x444444);
+
+    // Outer line of all internal frames, which separates them from the
+    // desktop background.
+    private static final ColorUIResource FRAME_OUTLINE
+            = new ColorUIResource(0x111111);
 
     // Completely black, used as the dark pixel of the inactive title bar
-    // bumps, which has to be darker than the panel background.
+    // bumps, which has to be darker than the panel background (SECONDARY3).
     private static final ColorUIResource PURE_BLACK
             = new ColorUIResource(0x000000);
 
@@ -96,19 +114,21 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
     private static final ColorUIResource BUTTON_FOREGROUND
             = new ColorUIResource(0xDDDDDD);
 
+    // Desktop behind the internal frames, darker than the panels so that
+    // the frames stand out from it
     private static final ColorUIResource DESKTOP_BACKGROUND
-            = new ColorUIResource(0x2E3033);
+            = new ColorUIResource(0x202020);
 
-    // The selected tab and the frame around the tab content are the
-    // lightest gray of the tabs, the unselected tabs are darker but still
-    // lighter than the black tab area behind them.
+    // The selected tab and the frame around the tab content are lighter
+    // than the panel background, while the unselected tabs are darker, which
+    // inverts the brightness order of the light theme.
     private static final ColorUIResource TAB_SELECTED
             = new ColorUIResource(0x4A4A4A);
 
     private static final ColorUIResource TAB_AREA_BACKGROUND = SECONDARY3;
 
     private static final ColorUIResource TAB_UNSELECTED
-            = new ColorUIResource(0x2E3033);
+            = new ColorUIResource(0x222222);
 
     @Override
     protected ColorUIResource getPrimary1() {
@@ -249,10 +269,11 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
         super.addCustomEntriesToTable(table);
         // The Metal frame border of internal frames is a light gray frame of
         // five pixels, which looks heavy on the dark desktop. The flat border
-        // uses the title bar color of the selected frame and dark grays for
-        // the others, with a slightly lighter outer line.
+        // is a medium gray for the selected frame and a dark gray for the
+        // others, both lighter than their title bars, with a dark outer line.
         table.put("InternalFrame.border", new ChornobylInternalFrameBorder(
-                PRIMARY3, SECONDARY2, WHITE, PRIMARY3));
+                FRAME_BORDER_ACTIVE, FRAME_OUTLINE, FRAME_BORDER_INACTIVE,
+                FRAME_OUTLINE));
         // The Ocean theme paints the menu bar and the tool bar with a gradient
         // from getWhite() to a hard-coded light gray, which gives a bright bar
         // on the black background. Without the gradient, the menu bar is

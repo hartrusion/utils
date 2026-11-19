@@ -25,9 +25,12 @@ package com.hartrusion.swing;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.LayoutManager;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.util.Map;
@@ -54,8 +57,9 @@ import javax.swing.plaf.metal.MetalInternalFrameUI;
  * UIDefaults keys that ChornobylMetalTheme writes:
  * ChornobylInternalFrame.activeBumpsHighlight, activeBumpsShadow,
  * inactiveBumpsHighlight, inactiveBumpsShadow, paletteBumpsHighlight and
- * paletteBumpsShadow. The buttons, the layout and the behavior of the Metal
- * title pane are kept.
+ * paletteBumpsShadow. The buttons and the behavior of the Metal title pane
+ * are kept, and its layout is only changed so far that the buttons are
+ * centered vertically like the frame icon and the title.
  * <p>
  * Frames with a right-to-left orientation are painted by the Metal title
  * pane as before, because the theme is only used with left-to-right texts.
@@ -151,6 +155,63 @@ public class ChornobylMetalInternalFrameUI extends MetalInternalFrameUI {
 
         ChornobylTitlePane(JInternalFrame internalFrame) {
             super(internalFrame);
+        }
+
+        @Override
+        protected LayoutManager createLayout() {
+            return new CenteredButtonsLayout(super.createLayout());
+        }
+
+        /**
+         * Layout of the title bar that lets the layout of the Metal title
+         * pane place the buttons and then centers them vertically. Metal
+         * places the buttons two pixels below the upper edge, while the frame
+         * icon and the title are centered, so that the buttons looked as if
+         * they were placed too high. The small palette title bar is left as
+         * Metal lays it out.
+         */
+        private class CenteredButtonsLayout implements LayoutManager {
+
+            // Layout of MetalInternalFrameTitlePane, which does the work.
+            private final LayoutManager metalLayout;
+
+            CenteredButtonsLayout(LayoutManager metalLayout) {
+                this.metalLayout = metalLayout;
+            }
+
+            @Override
+            public void addLayoutComponent(String name, Component component) {
+                metalLayout.addLayoutComponent(name, component);
+            }
+
+            @Override
+            public void removeLayoutComponent(Component component) {
+                metalLayout.removeLayoutComponent(component);
+            }
+
+            @Override
+            public Dimension preferredLayoutSize(Container container) {
+                return metalLayout.preferredLayoutSize(container);
+            }
+
+            @Override
+            public Dimension minimumLayoutSize(Container container) {
+                return metalLayout.minimumLayoutSize(container);
+            }
+
+            @Override
+            public void layoutContainer(Container container) {
+                metalLayout.layoutContainer(container);
+                if (isPalette) {
+                    return;
+                }
+                for (Component child : container.getComponents()) {
+                    // Centered the same way as the frame icon is painted
+                    int centeredY = container.getHeight() / 2
+                            - child.getHeight() / 2;
+                    child.setLocation(child.getX(), centeredY);
+                }
+            }
         }
 
         @Override

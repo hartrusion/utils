@@ -77,6 +77,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
@@ -96,7 +99,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * <p>
  * Most tabs place each component twice next to each other, once enabled and
  * once disabled, because the Metal look and feel paints the disabled state
- * with separate colors of the theme. The windows, menus and dialogs are
+ * with separate colors of the theme. One tab shows panels with all borders
+ * of BorderFactory, because the bevel and etched borders derive their
+ * shading from the panel background. The windows, menus and dialogs are
  * reachable with the menu bar, the tool bar, the popup menu (right click on a
  * column) and the buttons of the last tab. All texts are taken one after the
  * other from a Lorem Ipsum text by nextLoremText, so that each component
@@ -233,6 +238,7 @@ public class ExampleChornobylMetalTheme {
         mainTabs.addTab(nextLoremText(1), createComparisonPanel(
                 createDataColumn(true), createDataColumn(false)));
         mainTabs.addTab(nextLoremText(1), createContainersPanel());
+        mainTabs.addTab(nextLoremText(1), createBordersPanel());
         mainTabs.addTab(nextLoremText(1), createComparisonPanel(
                 createWindowsColumn(true), createWindowsColumn(false)));
         mainTabs.addTab(nextLoremText(1), new JLabel(nextLoremText(3)));
@@ -782,6 +788,64 @@ public class ExampleChornobylMetalTheme {
         horizontalSplit.setOneTouchExpandable(true);
         horizontalSplit.setDividerLocation(380);
         return horizontalSplit;
+    }
+
+    /**
+     * Creates the tab with panels that show the borders of BorderFactory,
+     * which are the raised and lowered bevel borders, the soft bevel
+     * borders, the etched borders, line, matte and dashed borders, titled
+     * borders in different positions and compound borders. The bevel and
+     * etched borders derive their colors from the panel background, so that
+     * this tab shows whether the background of a theme still allows their
+     * shading to be seen.
+     *
+     * @return Scroll pane that is added as tab
+     */
+    private JComponent createBordersPanel() {
+        Color lineColor = UIManager.getColor("controlDkShadow");
+        Border[] borders = {
+            BorderFactory.createRaisedBevelBorder(),
+            BorderFactory.createLoweredBevelBorder(),
+            BorderFactory.createRaisedSoftBevelBorder(),
+            BorderFactory.createLoweredSoftBevelBorder(),
+            BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+            BorderFactory.createEtchedBorder(EtchedBorder.RAISED),
+            BorderFactory.createLineBorder(lineColor),
+            BorderFactory.createLineBorder(lineColor, 3, true),
+            BorderFactory.createMatteBorder(2, 6, 2, 6, lineColor),
+            BorderFactory.createDashedBorder(lineColor, 2, 4, 2, true),
+            BorderFactory.createTitledBorder(nextLoremText(2)),
+            BorderFactory.createTitledBorder(
+                    BorderFactory.createEtchedBorder(), nextLoremText(2),
+                    TitledBorder.CENTER, TitledBorder.TOP),
+            BorderFactory.createTitledBorder(
+                    BorderFactory.createLoweredBevelBorder(),
+                    nextLoremText(2), TitledBorder.RIGHT,
+                    TitledBorder.BOTTOM),
+            BorderFactory.createTitledBorder(
+                    BorderFactory.createRaisedBevelBorder(),
+                    nextLoremText(2), TitledBorder.LEADING,
+                    TitledBorder.ABOVE_TOP),
+            BorderFactory.createCompoundBorder(
+                    BorderFactory.createRaisedBevelBorder(),
+                    BorderFactory.createLoweredBevelBorder()),
+            BorderFactory.createCompoundBorder(
+                    BorderFactory.createEtchedBorder(),
+                    BorderFactory.createEmptyBorder(6, 6, 6, 6))
+        };
+        JPanel bordersPanel = new JPanel(new GridLayout(0, 4, 12, 12));
+        bordersPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        for (Border border : borders) {
+            JPanel borderedPanel = new JPanel(new BorderLayout());
+            borderedPanel.setBorder(border);
+            JLabel label = new JLabel(nextLoremText(3), JLabel.CENTER);
+            label.setPreferredSize(new Dimension(160, 70));
+            borderedPanel.add(label, BorderLayout.CENTER);
+            bordersPanel.add(borderedPanel);
+        }
+        JPanel northWrapper = new JPanel(new BorderLayout());
+        northWrapper.add(bordersPanel, BorderLayout.NORTH);
+        return new JScrollPane(northWrapper);
     }
 
     /**

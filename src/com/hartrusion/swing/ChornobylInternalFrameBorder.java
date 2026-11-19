@@ -37,10 +37,11 @@ import javax.swing.plaf.UIResource;
  * five pixels in the outline color of the theme with light and dark corner
  * marks, which is a light gray in the dark theme, so that the frames look
  * heavy on the dark desktop. This border keeps the width of five pixels,
- * because the frame is resized by dragging it, but paints it in a fill
- * color close to the title bar, with a one pixel outer line that separates
- * the frame from the desktop, and without the corner marks and their
- * shading. The selected frame gets brighter colors than the others.
+ * because the frame is resized by dragging it, but paints it flat in a fill
+ * color that differs from the title bar, so that the border and the title
+ * bar can be told apart, with a one pixel outer line that separates the
+ * frame from the desktop, and without the corner marks and their shading.
+ * The selected frame gets a brighter fill than the others.
  * <p>
  * LLM code generated with Claude Opus 5.5
  *
