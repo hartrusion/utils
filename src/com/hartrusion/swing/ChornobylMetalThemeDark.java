@@ -85,6 +85,18 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
     private static final ColorUIResource DESKTOP_BACKGROUND
             = new ColorUIResource(0x2E3033);
 
+    // The selected tab and the frame around the tab content are slightly
+    // lighter than the panel background, while the unselected tabs are
+    // darker, which inverts the brightness order of the light theme.
+    private static final ColorUIResource TAB_SELECTED
+            = new ColorUIResource(0x4A4A4A);
+
+    private static final ColorUIResource TAB_AREA_BACKGROUND
+            = new ColorUIResource(0x3C3F41);
+
+    private static final ColorUIResource TAB_UNSELECTED
+            = new ColorUIResource(0x2E3033);
+
     @Override
     protected ColorUIResource getPrimary1() {
         return PRIMARY1;
@@ -143,6 +155,34 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
     @Override
     protected ColorUIResource getDesktopBackground() {
         return DESKTOP_BACKGROUND;
+    }
+
+    @Override
+    protected ColorUIResource getTabSelected() {
+        return TAB_SELECTED;
+    }
+
+    @Override
+    protected ColorUIResource getTabAreaBackground() {
+        return TAB_AREA_BACKGROUND;
+    }
+
+    @Override
+    protected ColorUIResource getTabUnselected() {
+        return TAB_UNSELECTED;
+    }
+
+    /**
+     * Returns the text color of controls such as tabs, check boxes, radio
+     * buttons, combo boxes and tables. The Ocean theme returns its own dark
+     * gray here instead of getBlack(), so that this getter has to be
+     * overridden as well to get light text on the dark controls.
+     *
+     * @return Light text color of the dark theme
+     */
+    @Override
+    public ColorUIResource getControlTextColor() {
+        return BLACK;
     }
 
     @Override

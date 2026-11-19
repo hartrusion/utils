@@ -18,6 +18,8 @@
 package com.hartrusion.swing;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.metal.OceanTheme;
@@ -187,6 +189,32 @@ public class ChornobylMetalTheme extends OceanTheme {
         return TAB_SELECTED;
     }
 
+    // Background of the area behind the tabs of a JTabbedPane, which is the
+    // neutral gray of the Ocean theme.
+    private static final ColorUIResource TAB_AREA_BACKGROUND
+            = new ColorUIResource(0xDADADA);
+
+    /**
+     *
+     * @return Background of the area behind the tabs of a JTabbedPane
+     */
+    protected ColorUIResource getTabAreaBackground() {
+        return TAB_AREA_BACKGROUND;
+    }
+
+    // Background of the tabs that are not selected, which is the neutral
+    // light gray of the Ocean theme.
+    private static final ColorUIResource TAB_UNSELECTED
+            = new ColorUIResource(0xEEEEEE);
+
+    /**
+     *
+     * @return Background of the tabs of a JTabbedPane that are not selected
+     */
+    protected ColorUIResource getTabUnselected() {
+        return TAB_UNSELECTED;
+    }
+
     /**
      * Tells whether this theme has a dark background with light text, so that
      * elements that are not colored by the Metal look and feel, such as the
@@ -232,9 +260,37 @@ public class ChornobylMetalTheme extends OceanTheme {
         // Tabbed pane: remove the light blue of the selected tab
         table.put("TabbedPane.selected", getTabSelected());
         table.put("TabbedPane.contentAreaColor", getTabSelected());
+        table.put("TabbedPane.tabAreaBackground", getTabAreaBackground());
+        table.put("TabbedPane.unselectedBackground", getTabUnselected());
+
+        // The Ocean theme paints the thumb of sliders and scroll bars with a
+        // bluish gradient, which is replaced by a gradient that has only the
+        // color of the buttons, so that the thumbs look like the flat buttons.
+        // A focused slider thumb gets the color of a pressed button.
+        table.put("Slider.gradient", createFlatGradient(getButtonReleased()));
+        table.put("Slider.focusGradient",
+                createFlatGradient(getButtonPressed()));
+        table.put("ScrollBar.gradient", createFlatGradient(getButtonReleased()));
+        // The scroll bar thumb uses these colors where no gradient is painted
+        // and for its highlight edge.
+        table.put("ScrollBar.thumb", getButtonReleased());
+        table.put("ScrollBar.thumbHighlight", getButtonPressed());
 
         // Frames inside JDesktopPane are JInternalFrames
         // Remove the gradient from the selected frame
         table.remove("InternalFrame.activeTitleGradient");
+    }
+
+    /**
+     * Creates a gradient in the format of the Ocean theme UIDefaults, which is
+     * a list of two ratios and three colors, with all three colors set to the
+     * same color. The Metal UI classes then fill the area with this color, so
+     * that elements that only support a gradient are painted flat.
+     *
+     * @param color The only color of the gradient
+     * @return Gradient value for the UIDefaults table
+     */
+    private static List<Object> createFlatGradient(Color color) {
+        return Arrays.asList(0.3F, 0.0F, color, color, color);
     }
 }
