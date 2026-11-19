@@ -263,18 +263,18 @@ public class ChornobylMetalTheme extends OceanTheme {
         table.put("TabbedPane.tabAreaBackground", getTabAreaBackground());
         table.put("TabbedPane.unselectedBackground", getTabUnselected());
 
-        // The Ocean theme paints the thumb of sliders and scroll bars with a
-        // bluish gradient, which is replaced by a gradient that has only the
-        // color of the buttons, so that the thumbs look like the flat buttons.
-        // A focused slider thumb gets the color of a pressed button.
+        // The Ocean theme paints the slider thumb with a bluish gradient,
+        // which is replaced by a gradient that has only the color of the
+        // buttons, so that the thumb looks like the flat buttons. A focused
+        // slider thumb gets the color of a pressed button.
         table.put("Slider.gradient", createFlatGradient(getButtonReleased()));
         table.put("Slider.focusGradient",
                 createFlatGradient(getButtonPressed()));
-        table.put("ScrollBar.gradient", createFlatGradient(getButtonReleased()));
-        // The scroll bar thumb uses these colors where no gradient is painted
-        // and for its highlight edge.
-        table.put("ScrollBar.thumb", getButtonReleased());
-        table.put("ScrollBar.thumbHighlight", getButtonPressed());
+
+        // Scroll bars: arrow buttons and thumb in the style of the buttons.
+        // This can not be done with colors only, because the Metal arrow
+        // buttons take the track color as fill and the text color as arrow.
+        table.put("ScrollBarUI", ChornobylMetalScrollBarUI.class.getName());
 
         // Frames inside JDesktopPane are JInternalFrames
         // Remove the gradient from the selected frame
