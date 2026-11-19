@@ -44,12 +44,16 @@ import javax.swing.plaf.UIResource;
  * theme. The icons of this class are filled with the button color, get the
  * button outline and draw the check mark or the dot in the text color of the
  * buttons, so that they look like the black switches of the control panel,
- * which the theme is modeled on, in the light and in the dark theme.
+ * which the theme is modeled on, in the light and in the dark theme. The
+ * title bar buttons of internal frames (close, iconify, maximize, restore
+ * and the small close button of palette frames) are provided in the same
+ * style, because the images of the Ocean theme contain blue and a shading
+ * that looks as if the light came from the lower right.
  * <p>
- * ChornobylMetalTheme writes the icons into CheckBox.icon and
- * RadioButton.icon of the UIDefaults. The colors are taken from
- * ChornobylButtonPainter at paint time, so that both themes use the same
- * icons.
+ * ChornobylMetalTheme writes the icons into CheckBox.icon, RadioButton.icon
+ * and the InternalFrame icon keys of the UIDefaults. The colors are taken
+ * from ChornobylButtonPainter at paint time, so that both themes use the
+ * same icons.
  * <p>
  * LLM code generated with Claude Opus 5.5
  *
@@ -61,6 +65,22 @@ public final class ChornobylMetalIconFactory {
     // so that the text of check boxes and radio buttons keeps its position.
     private static final int ICON_SIZE = 13;
 
+    // Size of the title bar buttons of internal frames, which is the size of
+    // the icons of the Ocean theme, so that the title bar keeps its height.
+    private static final int TITLE_ICON_SIZE = 16;
+
+    // Size of the close button in the small title bar of palette frames.
+    private static final int PALETTE_ICON_SIZE = 7;
+
+    /**
+     * Symbols of the title bar buttons of internal frames. RESTORE is the
+     * button that returns a maximized frame to its normal size, which Swing
+     * calls minimize icon.
+     */
+    private enum TitleButtonSymbol {
+        CLOSE, ICONIFY, MAXIMIZE, RESTORE
+    }
+
     private ChornobylMetalIconFactory() {
         // Only static methods
     }
@@ -71,6 +91,29 @@ public final class ChornobylMetalIconFactory {
 
     public static Icon getRadioButtonIcon() {
         return new RadioButtonIcon();
+    }
+
+    public static Icon getInternalFrameCloseIcon() {
+        return new TitleButtonIcon(TitleButtonSymbol.CLOSE, TITLE_ICON_SIZE);
+    }
+
+    public static Icon getInternalFrameIconifyIcon() {
+        return new TitleButtonIcon(TitleButtonSymbol.ICONIFY, TITLE_ICON_SIZE);
+    }
+
+    public static Icon getInternalFrameMaximizeIcon() {
+        return new TitleButtonIcon(TitleButtonSymbol.MAXIMIZE,
+                TITLE_ICON_SIZE);
+    }
+
+    public static Icon getInternalFrameMinimizeIcon() {
+        return new TitleButtonIcon(TitleButtonSymbol.RESTORE,
+                TITLE_ICON_SIZE);
+    }
+
+    public static Icon getInternalFramePaletteCloseIcon() {
+        return new TitleButtonIcon(TitleButtonSymbol.CLOSE,
+                PALETTE_ICON_SIZE);
     }
 
     /**
@@ -110,6 +153,94 @@ public final class ChornobylMetalIconFactory {
         @Override
         public int getIconHeight() {
             return ICON_SIZE;
+        }
+    }
+
+    /**
+     * Title bar button of an internal frame, which is a flat button with a
+     * light symbol and without any shading. The Ocean theme uses images
+     * here, which contain blue and light edges at the lower right side, so
+     * that they look as if they were lit from the lower right. The symbols
+     * are drawn line by line for sharp pixels, and the button is painted in
+     * the pressed color while the mouse holds it down.
+     */
+    private static class TitleButtonIcon implements Icon, UIResource,
+            Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        // Symbol drawn on the button.
+        private final TitleButtonSymbol symbol;
+
+        // Width and height of the button in pixels.
+        private final int size;
+
+        TitleButtonIcon(TitleButtonSymbol symbol, int size) {
+            this.symbol = symbol;
+            this.size = size;
+        }
+
+        @Override
+        public void paintIcon(Component component, Graphics g, int x, int y) {
+            boolean pressed = false;
+            boolean enabled = true;
+            if (component instanceof AbstractButton button) {
+                ButtonModel model = button.getModel();
+                pressed = model.isPressed() && model.isArmed();
+                enabled = model.isEnabled();
+            }
+            ChornobylButtonPainter.paintButtonBody(g, x, y, size, size,
+                    pressed, enabled);
+            g.setColor(ChornobylButtonPainter.getButtonForeground(enabled));
+            if (size < TITLE_ICON_SIZE) {
+                // The small palette close button only has room for a thin X
+                g.drawLine(x + 2, y + 2, x + size - 3, y + size - 3);
+                g.drawLine(x + size - 3, y + 2, x + 2, y + size - 3);
+                return;
+            }
+            switch (symbol) {
+                case CLOSE -> {
+                    // X of three pixels width
+                    g.drawLine(x + 4, y + 4, x + 11, y + 11);
+                    g.drawLine(x + 5, y + 4, x + 11, y + 10);
+                    g.drawLine(x + 4, y + 5, x + 10, y + 11);
+                    g.drawLine(x + 11, y + 4, x + 4, y + 11);
+                    g.drawLine(x + 10, y + 4, x + 4, y + 10);
+                    g.drawLine(x + 11, y + 5, x + 5, y + 11);
+                }
+                case ICONIFY ->
+                    g.fillRect(x + 4, y + 10, 8, 2);
+                case MAXIMIZE -> {
+                    // Window outline with a thicker title bar on top
+                    g.drawRect(x + 4, y + 4, 7, 7);
+                    g.drawLine(x + 4, y + 5, x + 11, y + 5);
+                }
+                case RESTORE -> {
+                    // Two overlapping windows, the front one hides the
+                    // lower left part of the back one.
+                    g.drawRect(x + 6, y + 3, 6, 6);
+                    g.drawLine(x + 6, y + 4, x + 12, y + 4);
+                    g.setColor(ChornobylButtonPainter.getButtonFill(pressed));
+                    g.fillRect(x + 3, y + 6, 7, 7);
+                    g.setColor(
+                            ChornobylButtonPainter.getButtonForeground(enabled));
+                    g.drawRect(x + 3, y + 6, 6, 6);
+                    g.drawLine(x + 3, y + 7, x + 9, y + 7);
+                }
+                default -> {
+                    // All symbols are handled above
+                }
+            }
+        }
+
+        @Override
+        public int getIconWidth() {
+            return size;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return size;
         }
     }
 

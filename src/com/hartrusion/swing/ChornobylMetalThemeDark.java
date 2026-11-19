@@ -68,8 +68,15 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
     private static final ColorUIResource SECONDARY2
             = new ColorUIResource(0x505050);
 
-    // Frame, panel and menu backgrounds, which are completely black
+    // Frame, panel and menu backgrounds, also the background of internal
+    // frames, which is darker than the darkest buttons (BUTTON_RELEASED) but
+    // not completely black
     private static final ColorUIResource SECONDARY3
+            = new ColorUIResource(0x121212);
+
+    // Completely black, used as the dark pixel of the inactive title bar
+    // bumps, which has to be darker than the panel background.
+    private static final ColorUIResource PURE_BLACK
             = new ColorUIResource(0x000000);
 
     // Background of text fields, lists and tables
@@ -203,9 +210,49 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
         return BLACK;
     }
 
+    // The title bar bumps of the light theme have a light upper left and a
+    // dark lower right pixel, which the Metal colors invert in the dark theme
+    // because its highlight colors are darker than its shadow colors. These
+    // getters swap them, so that the bumps look lit from the upper left.
+    @Override
+    protected ColorUIResource getActiveTitleBumpsHighlight() {
+        return PRIMARY1;
+    }
+
+    @Override
+    protected ColorUIResource getActiveTitleBumpsShadow() {
+        return WHITE;
+    }
+
+    @Override
+    protected ColorUIResource getInactiveTitleBumpsHighlight() {
+        return PRIMARY2;
+    }
+
+    @Override
+    protected ColorUIResource getInactiveTitleBumpsShadow() {
+        return PURE_BLACK;
+    }
+
+    @Override
+    protected ColorUIResource getPaletteBumpsHighlight() {
+        return PRIMARY1;
+    }
+
+    @Override
+    protected ColorUIResource getPaletteBumpsShadow() {
+        return WHITE;
+    }
+
     @Override
     public void addCustomEntriesToTable(UIDefaults table) {
         super.addCustomEntriesToTable(table);
+        // The Metal frame border of internal frames is a light gray frame of
+        // five pixels, which looks heavy on the dark desktop. The flat border
+        // uses the title bar color of the selected frame and dark grays for
+        // the others, with a slightly lighter outer line.
+        table.put("InternalFrame.border", new ChornobylInternalFrameBorder(
+                PRIMARY3, SECONDARY2, WHITE, PRIMARY3));
         // The Ocean theme paints the menu bar and the tool bar with a gradient
         // from getWhite() to a hard-coded light gray, which gives a bright bar
         // on the black background. Without the gradient, the menu bar is

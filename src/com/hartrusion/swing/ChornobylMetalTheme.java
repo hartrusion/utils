@@ -237,6 +237,56 @@ public class ChornobylMetalTheme extends OceanTheme {
         return getButtonReleased();
     }
 
+    /**
+     * Returns the upper left color of the bump pairs in the title bar of the
+     * selected internal frame, which is the Metal color in the light theme.
+     *
+     * @return Highlight color of the title bar bumps
+     */
+    protected ColorUIResource getActiveTitleBumpsHighlight() {
+        return getPrimaryControlHighlight();
+    }
+
+    /**
+     *
+     * @return Lower right color of the bumps of the selected title bar
+     */
+    protected ColorUIResource getActiveTitleBumpsShadow() {
+        return getPrimaryControlDarkShadow();
+    }
+
+    /**
+     *
+     * @return Upper left color of the bumps of inactive title bars
+     */
+    protected ColorUIResource getInactiveTitleBumpsHighlight() {
+        return getControlHighlight();
+    }
+
+    /**
+     *
+     * @return Lower right color of the bumps of inactive title bars
+     */
+    protected ColorUIResource getInactiveTitleBumpsShadow() {
+        return getControlDarkShadow();
+    }
+
+    /**
+     *
+     * @return Upper left color of the bumps of palette title bars
+     */
+    protected ColorUIResource getPaletteBumpsHighlight() {
+        return getPrimaryControlHighlight();
+    }
+
+    /**
+     *
+     * @return Lower right color of the bumps of palette title bars
+     */
+    protected ColorUIResource getPaletteBumpsShadow() {
+        return getPrimaryControlInfo();
+    }
+
     // Colors of the reading displays of the RBMK simulator (the JLabels
     // named jLabelReading... in PanelCoreControl), which show values in a
     // green monospaced font on a dark gray field with a black frame. The
@@ -394,6 +444,33 @@ public class ChornobylMetalTheme extends OceanTheme {
         // Frames inside JDesktopPane are JInternalFrames
         // Remove the gradient from the selected frame
         table.remove("InternalFrame.activeTitleGradient");
+
+        // Title bars of internal frames: bumps in colors of the theme and
+        // flat title bar buttons instead of the shaded Ocean images.
+        table.put("InternalFrameUI",
+                ChornobylMetalInternalFrameUI.class.getName());
+        table.put("ChornobylInternalFrame.activeBumpsHighlight",
+                getActiveTitleBumpsHighlight());
+        table.put("ChornobylInternalFrame.activeBumpsShadow",
+                getActiveTitleBumpsShadow());
+        table.put("ChornobylInternalFrame.inactiveBumpsHighlight",
+                getInactiveTitleBumpsHighlight());
+        table.put("ChornobylInternalFrame.inactiveBumpsShadow",
+                getInactiveTitleBumpsShadow());
+        table.put("ChornobylInternalFrame.paletteBumpsHighlight",
+                getPaletteBumpsHighlight());
+        table.put("ChornobylInternalFrame.paletteBumpsShadow",
+                getPaletteBumpsShadow());
+        table.put("InternalFrame.closeIcon",
+                ChornobylMetalIconFactory.getInternalFrameCloseIcon());
+        table.put("InternalFrame.iconifyIcon",
+                ChornobylMetalIconFactory.getInternalFrameIconifyIcon());
+        table.put("InternalFrame.maximizeIcon",
+                ChornobylMetalIconFactory.getInternalFrameMaximizeIcon());
+        table.put("InternalFrame.minimizeIcon",
+                ChornobylMetalIconFactory.getInternalFrameMinimizeIcon());
+        table.put("InternalFrame.paletteCloseIcon",
+                ChornobylMetalIconFactory.getInternalFramePaletteCloseIcon());
     }
 
     /**
