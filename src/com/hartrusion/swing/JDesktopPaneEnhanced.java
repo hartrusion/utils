@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.hartrusion.util;
+package com.hartrusion.swing;
 
 import java.awt.Component;
 import java.awt.Container;
