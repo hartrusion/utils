@@ -173,6 +173,18 @@ public class ChornobylMetalThemeDark extends ChornobylMetalTheme {
     }
 
     /**
+     * Keeps the progress bar fill of the dark theme at the selection gray,
+     * because the gray of disabled button texts that the light theme uses
+     * would be a bright bar on the dark background.
+     *
+     * @return Fill color of the done part of a JProgressBar
+     */
+    @Override
+    protected ColorUIResource getProgressBarFill() {
+        return PRIMARY2;
+    }
+
+    /**
      * Returns the text color of controls such as tabs, check boxes, radio
      * buttons, combo boxes and tables. The Ocean theme returns its own dark
      * gray here instead of getBlack(), so that this getter has to be

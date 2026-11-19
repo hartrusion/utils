@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.UIDefaults;
+import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.metal.OceanTheme;
 
@@ -216,6 +217,17 @@ public class ChornobylMetalTheme extends OceanTheme {
     }
 
     /**
+     * Returns the fill of the progress bars, which is the gray of the text of
+     * disabled buttons, because the default fill (PRIMARY2) is hardly visible
+     * on the panel background.
+     *
+     * @return Fill color of the done part of a JProgressBar
+     */
+    protected ColorUIResource getProgressBarFill() {
+        return getInactiveControlTextColor();
+    }
+
+    /**
      * Tells whether this theme has a dark background with light text, so that
      * elements that are not colored by the Metal look and feel, such as the
      * plots of the diagrams, can choose a matching color palette.
@@ -279,6 +291,23 @@ public class ChornobylMetalTheme extends OceanTheme {
         // of the scroll bar, so it gets the selection color of the dropdown
         // lists instead.
         table.put("ScrollBar.track", getPrimary2());
+
+        // Spinner and combo box arrow buttons in the style of the buttons,
+        // for the same reason as the scroll bar.
+        table.put("SpinnerUI", ChornobylMetalSpinnerUI.class.getName());
+        table.put("ComboBoxUI", ChornobylMetalComboBoxUI.class.getName());
+
+        // The ticks of the slider scale are painted in the slider foreground,
+        // which is PRIMARY2 by default and hardly visible, so they get the
+        // color of the button and list outlines.
+        table.put("Slider.foreground", getSecondary1());
+
+        // The lines of a TitledBorder are hardly visible in PRIMARY2, so they
+        // get the outline color as well.
+        table.put("TitledBorder.border",
+                new BorderUIResource.LineBorderUIResource(getSecondary1()));
+
+        table.put("ProgressBar.foreground", getProgressBarFill());
 
         // Frames inside JDesktopPane are JInternalFrames
         // Remove the gradient from the selected frame

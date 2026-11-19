@@ -23,10 +23,8 @@ import java.awt.Rectangle;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollBar;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalScrollBarUI;
 import javax.swing.plaf.metal.MetalScrollButton;
 
@@ -40,15 +38,16 @@ import javax.swing.plaf.metal.MetalScrollButton;
  * buttons, the thumb and the track, while the layout, the sizes and the
  * behavior of MetalScrollBarUI are kept.
  * <p>
- * The arrow buttons and the thumb are filled with the colors of the buttons
- * (Button.background, Button.select while pressed or dragged) and get the
- * same outline as the buttons, the arrows are drawn in Button.foreground and
- * the grip lines of the thumb are drawn flat without the highlight shadow of
- * the Ocean theme. The track is filled without the frame that Metal draws
- * around it, because that frame surrounds the thumb and makes it look like
- * an embedded element instead of a button. As all colors are read from the
- * UIDefaults when the UI is installed, ChornobylMetalThemeDark gets its own
- * dark colors without a subclass of this UI.
+ * The arrow buttons and the thumb are painted by ChornobylButtonPainter,
+ * which is shared with the spinner and combo box UIs, so that they get the
+ * fill, the outline and the arrows of the flat buttons, while the thumb takes
+ * the pressed color while it is dragged. The grip lines of the thumb are
+ * drawn flat without the highlight shadow of the Ocean theme. The track is
+ * filled with ScrollBar.track and without the frame that Metal draws around
+ * it, because that frame surrounds the thumb and makes it look like an
+ * embedded element instead of a button. As all colors are read from the
+ * UIDefaults, ChornobylMetalThemeDark gets its own dark colors without a
+ * subclass of this UI.
  * <p>
  * ChornobylMetalTheme registers this class as ScrollBarUI in the UIDefaults,
  * so that it is used by every JScrollBar and JScrollPane while the theme is
@@ -69,18 +68,6 @@ public class ChornobylMetalScrollBarUI extends MetalScrollBarUI {
     // Number of grip lines in the center of the thumb.
     private static final int GRIP_LINE_COUNT = 3;
 
-    // Fill of the arrow buttons and the thumb in their normal state.
-    private Color buttonReleasedColor;
-
-    // Fill of a pressed arrow button and of the thumb while it is dragged.
-    private Color buttonPressedColor;
-
-    // Color of the arrows on enabled arrow buttons.
-    private Color arrowColor;
-
-    // Color of the arrows on disabled arrow buttons.
-    private Color arrowDisabledColor;
-
     // Color of the grip lines, which lies between the fill and the arrow
     // color, so that the lines are visible without dominating the thumb.
     private Color gripColor;
@@ -92,14 +79,8 @@ public class ChornobylMetalScrollBarUI extends MetalScrollBarUI {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        buttonReleasedColor = UIManager.getColor("Button.background");
-        buttonPressedColor = UIManager.getColor("Button.select");
-        arrowColor = UIManager.getColor("Button.foreground");
-        arrowDisabledColor = UIManager.getColor("Button.disabledText");
-        if (arrowDisabledColor == null) {
-            arrowDisabledColor = MetalLookAndFeel.getInactiveControlTextColor();
-        }
-        gripColor = mixColors(buttonReleasedColor, arrowColor);
+        gripColor = mixColors(UIManager.getColor("Button.background"),
+                ChornobylButtonPainter.getButtonForeground(true));
     }
 
     /**
@@ -156,12 +137,9 @@ public class ChornobylMetalScrollBarUI extends MetalScrollBarUI {
         if (thumbBounds.isEmpty() || !scrollbar.isEnabled()) {
             return;
         }
-        Color fillColor = buttonReleasedColor;
-        if (isDragging) {
-            fillColor = buttonPressedColor;
-        }
-        paintButtonBody(g, thumbBounds.x, thumbBounds.y,
-                thumbBounds.width, thumbBounds.height, fillColor, true);
+        ChornobylButtonPainter.paintButtonBody(g, thumbBounds.x,
+                thumbBounds.y, thumbBounds.width, thumbBounds.height,
+                isDragging, true);
 
         g.setColor(gripColor);
         int gripExtent = (GRIP_LINE_COUNT - 1) * GRIP_SPACING;
@@ -193,38 +171,11 @@ public class ChornobylMetalScrollBarUI extends MetalScrollBarUI {
     }
 
     /**
-     * Paints the fill and the one pixel outline of a flat button, which is
-     * shared by the thumb and the arrow buttons. The outline uses the same
-     * theme color as the border of the buttons of the Metal look and feel.
-     *
-     * @param g Graphics to paint on
-     * @param x Left edge
-     * @param y Upper edge
-     * @param width Width of the button
-     * @param height Height of the button
-     * @param fillColor Fill inside the outline
-     * @param enabled false paints the outline in the disabled color
-     */
-    private static void paintButtonBody(Graphics g, int x, int y, int width,
-            int height, Color fillColor, boolean enabled) {
-        g.setColor(fillColor);
-        g.fillRect(x, y, width, height);
-        if (enabled) {
-            g.setColor(MetalLookAndFeel.getControlDarkShadow());
-        } else {
-            g.setColor(MetalLookAndFeel.getControlShadow());
-        }
-        g.drawRect(x, y, width - 1, height - 1);
-    }
-
-    /**
      * Arrow button at the ends of the scroll bar, which keeps the size
-     * calculation of MetalScrollButton and only replaces its painting by a
-     * flat button with an arrow in the text color of the buttons. It is an
-     * inner class because it reads the colors that the enclosing UI has taken
-     * from the UIDefaults.
+     * calculation of MetalScrollButton and only replaces its painting by the
+     * flat button of ChornobylButtonPainter.
      */
-    private class ChornobylScrollButton extends MetalScrollButton {
+    private static class ChornobylScrollButton extends MetalScrollButton {
 
         private static final long serialVersionUID = 1L;
 
@@ -235,60 +186,8 @@ public class ChornobylMetalScrollBarUI extends MetalScrollBarUI {
 
         @Override
         public void paint(Graphics g) {
-            int width = getWidth();
-            int height = getHeight();
-            Color fillColor = buttonReleasedColor;
-            if (getModel().isArmed() && getModel().isPressed()) {
-                fillColor = buttonPressedColor;
-            }
-            paintButtonBody(g, 0, 0, width, height, fillColor, isEnabled());
-
-            if (isEnabled()) {
-                g.setColor(arrowColor);
-            } else {
-                g.setColor(arrowDisabledColor);
-            }
-            paintArrow(g, getDirection(), width, height);
-        }
-
-        /**
-         * Draws a filled triangle line by line, which gives the same sharp
-         * pixel arrows as the Metal look and feel without antialiasing. The
-         * triangle has a base of 2 * arrowHeight - 1 pixels and its tip
-         * points into the scroll direction.
-         *
-         * @param g Graphics to paint on
-         * @param direction SwingConstants direction of the button
-         * @param width Width of the button
-         * @param height Height of the button
-         */
-        private void paintArrow(Graphics g, int direction, int width,
-                int height) {
-            int arrowHeight = (Math.min(width, height) + 2) / 4;
-            int centerX = width / 2;
-            int centerY = height / 2;
-            int startX = centerX - arrowHeight / 2;
-            int startY = centerY - arrowHeight / 2;
-            for (int row = 0; row < arrowHeight; row++) {
-                switch (direction) {
-                    case SwingConstants.NORTH ->
-                        g.drawLine(centerX - row, startY + row,
-                                centerX + row, startY + row);
-                    case SwingConstants.SOUTH -> {
-                        int halfWidth = arrowHeight - 1 - row;
-                        g.drawLine(centerX - halfWidth, startY + row,
-                                centerX + halfWidth, startY + row);
-                    }
-                    case SwingConstants.WEST ->
-                        g.drawLine(startX + row, centerY - row,
-                                startX + row, centerY + row);
-                    default -> {
-                        int halfWidth = arrowHeight - 1 - row;
-                        g.drawLine(startX + row, centerY - halfWidth,
-                                startX + row, centerY + halfWidth);
-                    }
-                }
-            }
+            ChornobylButtonPainter.paintArrowButton(g, getModel(),
+                    isEnabled(), getDirection(), getWidth(), getHeight());
         }
     }
 }
