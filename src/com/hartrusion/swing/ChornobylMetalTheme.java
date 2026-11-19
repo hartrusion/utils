@@ -275,6 +275,10 @@ public class ChornobylMetalTheme extends OceanTheme {
         // This can not be done with colors only, because the Metal arrow
         // buttons take the track color as fill and the text color as arrow.
         table.put("ScrollBarUI", ChornobylMetalScrollBarUI.class.getName());
+        // The track would have the panel background, which hides the extent
+        // of the scroll bar, so it gets the selection color of the dropdown
+        // lists instead.
+        table.put("ScrollBar.track", getPrimary2());
 
         // Frames inside JDesktopPane are JInternalFrames
         // Remove the gradient from the selected frame
